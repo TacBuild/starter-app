@@ -1,11 +1,19 @@
 "use client"
 
-import { ModeToggle } from "@/components/ui/theme-toggle";
+import { MessageSender } from "@/components/message-sender";
+import { TONWalletConnect } from "@/components/wallet-connect";
+import { CONTRACT_ADDRESS } from "@/lib/contract_address";
+import { useTonWallet } from "@tonconnect/ui-react";
 import Image from "next/image";
 
 export default function Home() {
+
+  const wallet = useTonWallet()
   return (
     <div >
+      <div className="absolute top-4 right-4">
+        <TONWalletConnect />
+      </div>
       <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
         <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
           <div className="flex items-center justify-center">
@@ -23,41 +31,36 @@ export default function Home() {
           </div>
           <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
             <li className="mb-2 tracking-[-.01em]">
-              Get started by editing{" "}
+              Get started by deploying your contract on {" "}
               <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-                app/page.tsx
+                contracts/contracts/MessageProxy.sol
               </code>
-              {" "} for your frontend interface.
+              {" "} on TAC EVM
+            </li>
+            <li className="tracking-[-.01em] mb-2">
+              Add your contract address to the{" "}
+              <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
+                lib/contract_address.ts
+              </code>
+              {" "} file.
             </li>
             <li className="tracking-[-.01em]">
-              Deploy your smart contracts from the{" "}
-              <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-                contracts/
-              </code>
-              {" "}  folder to TAC EVM.
+              Connect your wallet and send a message to the contract
 
             </li>
 
           </ol>
 
           <div className="flex gap-4 items-center flex-col sm:flex-row">
-            <a
-              className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-[#91019B] text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-              href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            {wallet?.account ?
+              <MessageSender proxyAddress={CONTRACT_ADDRESS.MESSAGE_PROXY} />
+              :
+              <div className="text-pink-500 font-medium">
+                <p>Please connect your wallet to continue</p>
+              </div>
+            }
 
-              Connect Wallet
-            </a>
-            <a
-              className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-              href="https://docs.tac.build"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Read our docs
-            </a>
+
           </div>
         </main>
         <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
